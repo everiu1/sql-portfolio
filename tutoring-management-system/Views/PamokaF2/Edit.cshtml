@@ -1,0 +1,174 @@
+﻿@model Org.Ktu.Isk.P175B602.Autonuoma.Models.SutartisF2.PamokaCE
+
+@* this will also be used as page title in main layout *@
+@{
+	ViewData["title"] = "Pamokos redagavimas (F2)";
+}
+
+@* content header *@
+<div class="main-content-header">
+	<span class="title">@ViewData["title"]</span>
+	<span class="actions">
+		<a href="@Url.Action("Index")"
+		   class="btn btn-outline-primary btn-sm">
+			<i class="fa-solid fa-angles-left"></i> Atgal į sąrašą
+		</a>
+	</span>
+</div>
+
+@* content itself *@
+<div class="main-content-ced">
+	@using (Html.BeginForm(FormMethod.Post, new { @class = "entity-ce" }))
+	{
+		@Html.AntiForgeryToken()
+
+		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+		
+		@Html.HiddenFor(m => m.Pamoka.Id)
+
+		<fieldset>
+			<legend class="text-center">Pagrindinė informacija</legend>
+			<div class="form-group">
+				@Html.LabelFor(m => m.Pamoka.Dalykas)
+				@Html.EditorFor(m => m.Pamoka.Dalykas, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(m => m.Pamoka.Dalykas, "", new { @class = "text-danger" })
+			</div>
+			<div class="form-group">
+				@Html.LabelFor(m => m.Pamoka.FkMokinys)
+				@Html.DropDownListFor(m => m.Pamoka.FkMokinys, Model.Lists.Mokiniai, (string)ViewData["none-chosen"])
+				@Html.ValidationMessageFor(m => m.Pamoka.FkMokinys, "")
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.Pamoka.FkKorepetitorius)
+				@Html.DropDownListFor(m => m.Pamoka.FkKorepetitorius, Model.Lists.Korepetitoriai, (string)ViewData["none-chosen"])
+				@Html.ValidationMessageFor(m => m.Pamoka.FkKorepetitorius, "")
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.Pamoka.FkTvarkarastis)
+				@Html.DropDownListFor(m => m.Pamoka.FkTvarkarastis, Model.Lists.Tvarkarastis, (string)ViewData["none-chosen"])
+				@Html.ValidationMessageFor(m => m.Pamoka.FkTvarkarastis, "")
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.Pamoka.FkMokejimas)
+				@Html.DropDownListFor(m => m.Pamoka.FkMokejimas, Model.Lists.Mokejimai, (string)ViewData["none-chosen"])
+				@Html.ValidationMessageFor(m => m.Pamoka.FkMokejimas, "")
+			</div>
+			<div class="form-group">
+				@Html.LabelFor(m => m.Pamoka.Trukme)
+				@Html.EditorFor(m => m.Pamoka.Trukme, new { htmlAttributes = new { @class = "form-control", type = "number", min = "1" } })
+				@Html.ValidationMessageFor(m => m.Pamoka.Trukme, "", new { @class = "text-danger" })
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.Pamoka.Ikainis)
+				@Html.EditorFor(m => m.Pamoka.Ikainis, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0" } })
+				@Html.ValidationMessageFor(m => m.Pamoka.Ikainis, "", new { @class = "text-danger" })
+			</div>
+			@* Nuoroda *@
+			<div class="form-group">
+				@Html.LabelFor(m => m.Pamoka.Nuoroda)
+				@Html.EditorFor(m => m.Pamoka.Nuoroda, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(m => m.Pamoka.Nuoroda, "", new { @class = "text-danger" })
+			</div>
+
+			@* Įvertinimas *@
+			<div class="form-group">
+				@Html.LabelFor(m => m.Pamoka.Ivertinimas)
+				@Html.EditorFor(m => m.Pamoka.Ivertinimas, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(m => m.Pamoka.Ivertinimas, "", new { @class = "text-danger" })
+			</div>
+
+			
+			<div class="form-group">
+				@Html.LabelFor(m => m.Pamoka.Pradzios_laikas)
+				@Html.EditorFor(m => m.Pamoka.Pradzios_laikas, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(m => m.Pamoka.Pradzios_laikas, "", new { @class = "text-danger" })
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<div class="container-fluid d-flex d-row justify-content-between align-items-center">
+				<span></span>
+				<legend style="width: unset; margin-bottom: 0px;">Pamokos medžiaga</legend>
+				<button name="add"
+						value="1"
+						formnovalidate
+						formaction="@Url.Action()#listEnd"
+						class="btn btn-info">
+					<i class="fa-solid fa-plus"></i> Pridėti
+				</button>
+			</div>
+
+			<table class="table table-striped w-100">
+				<thead>
+					<tr>
+						<th>Medžiaga</th>
+						<th>Paskirtis</th>
+						<th>Trukmė (min)</th>
+						<th>Pastabos</th>
+						<th style="width: 1px;"></th>
+					</tr>
+				</thead>
+				<tbody>
+					@for (var i = 0; i < Model.PamokosMedziagos.Count; i++)
+					{
+						<tr>
+							<td class="form-group">
+								@Html.HiddenFor(m => m.PamokosMedziagos[i].InListId)
+
+								@Html.DropDownListFor(
+																	m => m.PamokosMedziagos[i].FkMokomojiMedziaga,
+																	Model.Lists.MokomosiosMedziagos,
+																	(string)ViewData["none-chosen"]
+																	)
+								@Html.ValidationMessageFor(m => m.PamokosMedziagos[i].FkMokomojiMedziaga, "")
+							</td>
+							<td class="form-group">
+								@Html.EditorFor(m => m.PamokosMedziagos[i].Paskirtis)
+								@Html.ValidationMessageFor(m => m.PamokosMedziagos[i].Paskirtis, "")
+							</td>
+							<td class="form-group">
+								@Html.EditorFor(m => m.PamokosMedziagos[i].NaudojimosiTrukme)
+								@Html.ValidationMessageFor(m => m.PamokosMedziagos[i].NaudojimosiTrukme, "")
+							</td>
+							<td class="form-group">
+								@Html.EditorFor(m => m.PamokosMedziagos[i].Pastabos)
+								@Html.ValidationMessageFor(m => m.PamokosMedziagos[i].Pastabos, "")
+							</td>
+							<td>
+								<button name="remove"
+										value="@Model.PamokosMedziagos[i].InListId"
+										formnovalidate
+										formaction="@Url.Action()#listEnd"
+										class="btn btn-danger">
+									<i class="fa-solid fa-trash"></i> Šalinti
+								</button>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+
+			<span id="listEnd"></span>
+		</fieldset>
+
+		<div class="container-fluid d-flex d-row justify-content-end">
+			<button name="save" value="1" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Išsaugoti</button>
+		</div>
+	}
+</div>
+
+@* content footer *@
+<div class="main-content-footer">
+	<span class="title"></span>
+	<span class="actions">
+		<a href="@Url.Action("Index")"
+		   class="btn btn-outline-primary btn-sm">
+			<i class="fa-solid fa-angles-left"></i> Atgal į sąrašą
+		</a>
+	</span>
+</div>

@@ -1,0 +1,80 @@
+﻿@model Org.Ktu.Isk.P175B602.Autonuoma.Models.Paslauga.PaslaugaCE
+
+@{
+	ViewData["title"] = "Mokomosios medizagos redagavimas";
+}
+
+@* content header *@
+<div class="main-content-header">
+	<span class="title">@ViewData["title"]</span>
+	<span class="actions">
+		<a href="@Url.Action("Index")"
+		   class="btn btn-outline-primary btn-sm">
+			<i class="fa-solid fa-angles-left"></i> Atgal į sąrašą
+		</a>
+	</span>
+</div>
+
+@* content itself *@
+<div class="main-content-ced">
+	@using (Html.BeginForm(FormMethod.Post, new { @class = "entity-ce" }))
+	{
+		@Html.AntiForgeryToken()
+
+		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+		
+		@Html.HiddenFor(m => m.MokomojiMedizaga.Id)
+
+		<fieldset>
+			<legend class="text-center">Mokomoji medizaga</legend>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.MokomojiMedizaga.Dalykas)
+				@Html.EditorFor(m => m.MokomojiMedizaga.Dalykas)
+				@Html.ValidationMessageFor(m => m.MokomojiMedizaga.Dalykas, "")
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.MokomojiMedizaga.Pavadinimas)
+				@Html.EditorFor(m => m.MokomojiMedizaga.Pavadinimas)
+				@Html.ValidationMessageFor(m => m.MokomojiMedizaga.Pavadinimas, "")
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.MokomojiMedizaga.Klase)
+				@Html.EditorFor(m => m.MokomojiMedizaga.Klase)
+				@Html.ValidationMessageFor(m => m.MokomojiMedizaga.Klase, "")
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.MokomojiMedizaga.Tipas)
+				@Html.EditorFor(m => m.MokomojiMedizaga.Tipas)
+				@Html.ValidationMessageFor(m => m.MokomojiMedizaga.Tipas, "")
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.MokomojiMedizaga.Dalis)
+				@Html.EditorFor(m => m.MokomojiMedizaga.Dalis)
+				@Html.ValidationMessageFor(m => m.MokomojiMedizaga.Dalis, "")
+			</div>
+		</fieldset>
+
+		
+
+		<div class="container-fluid d-flex d-row justify-content-end">
+			<button name="save" value="1" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Išsaugoti</button>
+		</div>
+	}
+</div>
+
+@* content footer *@
+<div class="main-content-footer">
+	<span class="title"></span>
+	<span class="actions">
+		<a href="@Url.Action("Index")"
+		   class="btn btn-outline-primary btn-sm">
+			<i class="fa-solid fa-angles-left"></i> Atgal į sąrašą
+		</a>
+	</span>
+</div>

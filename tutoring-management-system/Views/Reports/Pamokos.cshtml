@@ -1,0 +1,128 @@
+﻿@model Org.Ktu.Isk.P175B602.Autonuoma.Models.ContractsReport.Report
+
+@* puslapio antraštė *@
+@{
+	ViewData["title"] = "Korepetitorių pamokų ataskaita";
+}
+
+@* antraštė *@
+<div class="main-content-header">
+	<span class="title">@ViewData["title"]</span>
+</div>
+
+@* turinys *@
+<div class="main-content-rep">
+	@using (Html.BeginForm(FormMethod.Get, new { @class = "rep" }))
+	{
+		<p><strong>Parengta:</strong> @String.Format("{0:yyyy-MM-dd HH:mm}", DateTime.Now)</p>
+
+		
+		<div class="filter">
+			<div class="fields"> 
+				<div class="field">
+					<label>@Html.DisplayNameFor(m => m.TrukmeNuo)</label>
+					@Html.TextBoxFor(m => m.TrukmeNuo, new { @type = "number" })
+					@Html.ValidationMessageFor(m => m.TrukmeNuo, "", new { @style = "color: red; font-size: 12px;" })
+				</div>
+				<div class="field">
+					<label>@Html.DisplayNameFor(m => m.TrukmeIki)</label>
+					@Html.TextBoxFor(m => m.TrukmeIki, new { @type = "number" })
+					@Html.ValidationMessageFor(m => m.TrukmeIki, "", new { @style = "color: red; font-size: 12px;" })
+				</div>
+				<div class="field">
+					<label>@Html.DisplayNameFor(m => m.MinIvertinimas)</label>
+					@Html.TextBoxFor(m => m.MinIvertinimas, new { @type = "number" })
+					@Html.ValidationMessageFor(m => m.MinIvertinimas, "", new { @style = "color: red; font-size: 12px;" })
+				</div>
+				<div class="field">
+					<label>@Html.DisplayNameFor(m => m.MinPatirtis)</label>
+					@Html.TextBoxFor(m => m.MinPatirtis, new { @type = "number" })
+					@Html.ValidationMessageFor(m => m.MinPatirtis, "", new { @style = "color: red; font-size: 12px;" })
+				</div>
+			</div> 
+
+			<div class="buttons">
+				<button class="btn btn-success"><i class="fa-solid fa-filter"></i> Atrinkti</button>
+			</div>
+		</div> 
+
+		
+		<table class="report">
+			<thead>
+				<tr>
+					<th>@Html.DisplayNameFor(m => m.Pamokos[0].PamokosNr)</th>
+					<th>@Html.DisplayNameFor(m => m.Pamokos[0].Dalykas)</th>
+					<th>@Html.DisplayNameFor(m => m.Pamokos[0].PamokosTrukme)</th>
+					<th>@Html.DisplayNameFor(m => m.Pamokos[0].PanaudotuMedziaguSkaicius)</th>
+					<th>@Html.DisplayNameFor(m => m.Pamokos[0].BendraMedziaguTrukme)</th>
+					<th>@Html.DisplayNameFor(m => m.Pamokos[0].VidutineMedziagosTrukme)</th>
+					<th>@Html.DisplayNameFor(m => m.Pamokos[0].IlgiausiasMedziagosNaudojimas)</th>
+				</tr>
+			</thead>
+			<tbody>
+				@if (Model.Pamokos == null || Model.Pamokos.Count == 0)
+				{
+						<tr class="no-data-msg">
+							<td colspan="7" align="center">Nurodytame laikotarpyje nebuvo pravesta pamokų</td>
+						</tr>
+				}
+				else
+				{
+					int tarpinisMedziaguSk = 0;
+					int tarpineMedziaguTrukme = 0;
+
+					@for (int i = 0; i < Model.Pamokos.Count; i++)
+					{
+						tarpinisMedziaguSk += Model.Pamokos[i].PanaudotuMedziaguSkaicius;
+						tarpineMedziaguTrukme += Model.Pamokos[i].BendraMedziaguTrukme;
+
+						if (i == 0 || Model.Pamokos[i].Korepetitorius != Model.Pamokos[i - 1].Korepetitorius)
+						{
+										<tr class="group-header">
+											<td colspan="7" align="center">
+												<b>@Model.Pamokos[i].Korepetitorius (Patirtis: @Model.Pamokos[i].PatirtisMetais m.)</b>
+											</td>
+										</tr>
+						}
+
+								<tr>
+									<td>#@Html.DisplayFor(m => Model.Pamokos[i].PamokosNr)</td>
+									<td>@Html.DisplayFor(m => Model.Pamokos[i].Dalykas)</td>
+									<td>@Html.DisplayFor(m => Model.Pamokos[i].PamokosTrukme)</td>
+									<td>@Html.DisplayFor(m => Model.Pamokos[i].PanaudotuMedziaguSkaicius)</td>
+									<td>@Html.DisplayFor(m => Model.Pamokos[i].BendraMedziaguTrukme)</td>
+							<td>@Html.DisplayFor(m => Model.Pamokos[i].VidutineMedziagosTrukme)</td>
+									<td>@Html.DisplayFor(m => Model.Pamokos[i].IlgiausiasMedziagosNaudojimas)</td>
+								</tr>
+
+						if (i == Model.Pamokos.Count - 1 || Model.Pamokos[i].Korepetitorius != Model.Pamokos[i + 1].Korepetitorius)
+						{
+										<tr>
+											<td colspan="3" align="right"><b>Bendrai šiam korepetitoriui:</b></td>
+											<td><b>@tarpinisMedziaguSk</b></td>
+											<td><b>@tarpineMedziaguTrukme</b></td>
+											<td></td>
+								<td></td>
+										</tr>
+
+							tarpinisMedziaguSk = 0;
+							tarpineMedziaguTrukme = 0;
+						}
+					}
+
+						<tr class="grand-total-header">
+							<td colspan="7" align="center"><b>Iš viso visoje ataskaitoje</b></td>
+						</tr>
+
+						<tr>
+							<td colspan="3"></td>
+							<td><b>@Model.VisoPanaudotaMedziagu</b></td>
+							<td><b>@Model.BendraVisuMedziaguTrukme</b></td>
+							<td></td>
+						<td></td>
+						</tr>
+				}
+			</tbody>
+		</table>
+	}
+</div>

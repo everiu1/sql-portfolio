@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Org.Ktu.Isk.P175B602.Autonuoma.Models.Korepetitorius>
+
+@* this will also be used as page title in main layout *@
+@{ ViewData["title"] = "Korepetitoriai"; }
+
+@* content header *@
+<div class="main-content-header">
+	<span class="title">@ViewData["title"]</span>
+	<span class="actions">
+		<a href="@Url.Action("Create")" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Sukurti naują</a>
+	</span>
+</div>
+
+@* content itself *@
+<div class="main-content-lst">
+	<table class="entity-list">
+		<thead>
+			<tr>
+				<th>
+					@Html.DisplayNameFor(model => model.Vardas)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Pavarde)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.El_pastas)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Tel_numeris)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Valandos_per_savaite)
+				</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model) {
+			<tr>
+					<td>
+						@Html.DisplayFor(modelItem => item.Vardas)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Pavarde)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.El_pastas)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Tel_numeris)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Valandos_per_savaite)
+					</td>
+					<td>
+						<a href="@Url.Action("Edit", new { id = item.Id })" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i> Redaguoti</a>
+						<a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-danger"><i class="fa-solid fa-trash"></i> Šalinti</a>
+					</td>
+			</tr>
+			}
+		</tbody>
+	</table>
+</div>
